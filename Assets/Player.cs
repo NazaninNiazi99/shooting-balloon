@@ -10,9 +10,9 @@ public class Player : MonoBehaviour
     private float xRotation = 0.0f;
 
     public GameObject bulletPrefab; // The bullet prefab to shoot
+    public Transform firePoint; // The point from which the bullets will be fired
     public float bulletForce = 20f; // The force applied to the bullets
-    public GameObject gunEnd;
-    private Vector3 aim;
+
     // Update is called once per frame
     void Update()
     {
@@ -37,22 +37,8 @@ public class Player : MonoBehaviour
     }
     void Shoot()
     {
-
-        Vector3 mousePos = Input.mousePosition;
-        mousePos += Camera.main.transform.forward * -10f; // Make sure to add some "depth" to the screen point
-        aim = Camera.main.ScreenToWorldPoint(mousePos);
-        if (Input.GetKey(KeyCode.Mouse0))
-        {
-            gunEnd.transform.LookAt(aim);
-            GameObject bullet = Instantiate(bulletPrefab, gunEnd.transform.position, Quaternion.identity);
-            bullet.transform.LookAt(aim);
-            Rigidbody b = bullet.GetComponent<Rigidbody>();
-            b.AddRelativeForce(Vector3.forward * bulletForce);
-        }
-        // // Get the rigidbody of the bullet
-        // Rigidbody rb = bullet.GetComponent<Rigidbody>();
-
-        // // Apply force to the bullet
-        // rb.AddForce(firePoint.forward * bulletForce, ForceMode.Impulse);
+        firePoint.LookAt(Input.mousePosition);
+        // Instantiate a bullet at the fire point
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
     }
 }
